@@ -1,0 +1,11 @@
+{
+  "name": "vk-js-sdk-typings",
+  "version": "1.0.0",
+  "description": "Typescript type defenitions for VK Javascript SDK",
+  "main": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
