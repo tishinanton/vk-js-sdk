@@ -2186,7 +2186,7 @@ declare namespace VK {
             /**
              * настройки уведомлений для беседы, если они есть.
              */
-            push_settings: any; //TODO: findout type
+            push_settings: PushSettings;
             /**
              * количество участников беседы.
              */
@@ -2229,6 +2229,70 @@ declare namespace VK {
          * тип действия (если это служебное сообщение)
          */
         export type MessageAction = 'chat_photo_update' | 'chat_photo_remove' | 'chat_create' | 'chat_title_update' | 'chat_invite_user' | 'chat_kick_user' | 'chat_pin_message' | 'chat_unpin_message' | 'chat_invite_user_by_link';
+
+        /**
+         * Объект, описывающий чат
+         */
+        export interface Chat {
+            /**
+             * идентификатор беседы.
+             */
+            id: number;
+            /**
+             * тип диалога.
+             */
+            type: string;
+            /**
+             * название беседы.
+             */
+            title: string;
+            /**
+             * идентификатор пользователя, который является создателем беседы.
+             */
+            admin_id: number;
+            /**
+             * список идентификаторов (integer) участников беседы.
+             */
+            users: number[];
+            /**
+             * настройки оповещений для диалога
+             */
+            push_settings: PushSettings;
+            /**
+             * URL изображения-обложки чата шириной 50 px (если доступно).
+             */
+            photo_50: string;
+            /**
+             * URL изображения-обложки чата шириной 200 px (если доступно).
+             */
+            photo_100: string;
+            /**
+             * URL изображения-обложки чата шириной 200 px (если доступно).
+             */
+            photo_200: string;
+            /**
+             * флаг, указывающий, что пользователь покинул беседу. Всегда содержит 1.
+             */
+            left: number;
+            /**
+             * флаг, указывающий, что пользователь был исключен из беседы. Всегда содержит 1.
+             */
+            kicked: number;
+        }
+
+        /**
+         * настройки оповещений для диалога
+         */
+        export interface PushSettings {
+            /**
+             * указывает, включен ли звук оповещений (1 — включен, 0 — отключен);
+             */
+            sound: number;
+            /**
+             * указывает, до какого времени оповещения для чата отключены. -1 — отключены навсегда (бессрочно).
+             */
+            disabled_until: number;
+        }
     }
 
 }
