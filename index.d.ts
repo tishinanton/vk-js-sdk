@@ -2658,6 +2658,9 @@ declare namespace VK {
             can_like: number;
         }
 
+        /**
+         * Объект, описывающий приложение
+         */
         export interface App {
             /**
              * идентификатор приложения.
@@ -2790,6 +2793,66 @@ declare namespace VK {
          * тип приложения
          */
         export type AppType = 'app' | 'game' | 'site' | 'standalone';
+
+        /**
+         * Объект, описывающий опрос
+         */
+        export interface Poll {
+            /**
+             * идентификатор опроса для получения информации о нем через метод polls.getById.
+             */
+            id: number;
+            /**
+             * идентификатор владельца опроса.
+             */
+            owner_id: number;
+            /**
+             * дата создания в формате Unixtime.
+             */
+            created: number;
+            /**
+             * текст вопроса.
+             */
+            question: string;
+            /**
+             * количество голосов.
+             */
+            votes: number;
+            /**
+             * идентификатор варианта ответа, выбранного текущим пользователем.
+             */
+            answer_id: number;
+            /**
+             * массив объектов, которые содержат информацию о вариантах ответа. 
+             */
+            answers: PollAnswer[];
+            /**
+             * содержит 1, если опрос анонимный.
+             */
+            anonymous: number;
+        }
+
+        /**
+         * информация о варианте ответа
+         */
+        export interface PollAnswer {
+            /**
+             * идентификатор ответа;
+             */
+            id: number;
+            /**
+             * текст ответа;
+             */
+            text: string;
+            /**
+             * число проголосовавших за этот ответ;
+             */
+            votes: number;
+            /**
+             * рейтинг ответа.
+             */
+            rate: number;
+        }
     }
 
 }
