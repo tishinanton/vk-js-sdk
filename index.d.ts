@@ -2406,6 +2406,9 @@ declare namespace VK {
             view_url: string;
         }
 
+        /**
+         * Объект, описывающий товар
+         */
         export interface MarketItem {
             /**
              * идентификатор товара.
@@ -2524,6 +2527,36 @@ declare namespace VK {
              * строковое представление цены.
              */
             text: string;
+        }
+
+        /**
+         * Объект, описывающий подборку товаров
+         */
+        export interface MarketAlbum {
+            /**
+             * идентификатор подборки.
+             */
+            id: number;
+            /**
+             * идентификатор владельца подборки.
+             */
+            owner_id: number;
+            /**
+             * название подборки.
+             */
+            title: string;
+            /**
+             * обложка подборки, объект, описывающий фотографию.
+             */
+            photo: any; //TODO: change to Photo
+            /**
+             * число товаров в подборке.
+             */
+            count: number;
+            /**
+             * дата обновления подборки в формате Unixtime.
+             */
+            updated_time: number;
         }
     }
 
