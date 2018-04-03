@@ -2900,7 +2900,7 @@ declare namespace VK {
             /**
              * массив с копиями изображения в разных размерах.
              */
-            sizes: PhotoSize[];
+            sizes: Size<PhotoSizeType>[];
             /**
              * URL копии фотографии с максимальным размером 75x75px.
              */
@@ -2938,7 +2938,7 @@ declare namespace VK {
         /**
          * информация о копиях исходного изображения разных размеров
          */
-        export interface PhotoSize {
+        export interface Size<TType = PhotoSizeType> {
             /**
              * URL копии изображения.
              */
@@ -2954,7 +2954,7 @@ declare namespace VK {
             /**
              * обозначение размера и пропорций копии.
              */
-            type: PhotoSizeType | DocumentSizeType;
+            type: TType;
         }
 
         /**
@@ -3159,6 +3159,117 @@ declare namespace VK {
              * (для live = 1). Поле свидетельствует о том, что трансляция скоро начнётся.
              */
             upcoming: number;
+        }
+
+        /**
+         * Объект, описывающий документ
+         */
+        export interface Doc {
+            /**
+             * идентификатор документа.
+             */
+            id: number;
+            /**
+             * идентификатор пользователя, загрузившего документ.
+             */
+            owner_id: number;
+            /**
+             * название документа.
+             */
+            title: string;
+            /**
+             * размер документа в байтах.
+             */
+            size: number;
+            /**
+             * расширение документа.
+             */
+            ext: string;
+            /**
+             * адрес документа, по которому его можно загрузить.
+             */
+            url: string;
+            /**
+             * дата добавления в формате Unixtime.
+             */
+            date: number;
+            /**
+             * тип документа. Возможные значения: 1 — текстовые документы; 2 — архивы; 3 — gif; 4 — изображения; 5 — аудио; 6 — видео; 7 — электронные книги; 8 — неизвестно.
+             */
+            type: number;
+            /**
+             * информация для предварительного просмотра документа
+             */
+            preview: DocPreview;
+
+        }
+
+        /**
+         * информация для предварительного просмотра документа
+         */
+        export interface DocPreview {
+            /**
+             * изображения для предпросмотра
+             */
+            photo: DocPreviewPhoto,
+            /**
+             * данные о граффити
+             */
+            graffiti: DocPreviewGrafiti;
+            /**
+             * данные об аудиосообщении. Объект, который содержит следующие поля
+             */
+            audio_msg: DocPreviewAudioMsg;
+        }
+
+        /**
+         * изображения для предпросмотра
+         */
+        export interface DocPreviewPhoto {
+            /**
+             * массив копий изображения в разных размерах
+             */
+            sizes: Size<DocumentSizeType>[]
+        }
+
+        /**
+         * данные о граффити
+         */
+        export interface DocPreviewGrafiti {
+            /**
+             * URL документа с граффити;
+             */
+            src: string;
+            /**
+             * ширина изображения в px;
+             */
+            width: number;
+            /**
+             *  высота изображения в px.
+             */
+            height: number;
+        }
+
+        /**
+         * данные об аудиосообщении
+         */
+        export interface DocPreviewAudioMsg {
+            /**
+             * длительность аудиосообщения в секундах
+             */
+            duration: number;
+            /**
+             * массив значений (integer) для визуального отображения звука;
+             */
+            waveform: number[];
+            /**
+             *  URL .ogg-файла;
+             */
+            link_ogg: string;
+            /**
+             * URL .mp3-файла.
+             */
+            link_mp3: string;
         }
 
         //#endregion
