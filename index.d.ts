@@ -1950,7 +1950,7 @@ declare namespace VK {
             /**
              * нформация о валюте. Объект, содержащий поля:
              */
-            currency: GroupCurrency;
+            currency: Currency;
             /**
              * строковое обозначение.
     
@@ -1961,7 +1961,7 @@ declare namespace VK {
         /**
          * информация о валюте
          */
-        export interface GroupCurrency {
+        export interface Currency {
             /**
              * идентификатор валюты;
              */
@@ -2404,6 +2404,126 @@ declare namespace VK {
              * адрес страницы для отображения вики-страницы.
              */
             view_url: string;
+        }
+
+        export interface MarketItem {
+            /**
+             * идентификатор товара.
+             */
+            id: number;
+            /**
+             * идентификатор владельца товара.
+             */
+            owner_id: number;
+            /**
+             * название товара
+             */
+            title: string;
+            /**
+             * текст описания товара.
+             */
+            description: string;
+            /**
+             * цена
+             */
+            price: MarketItemPrice;
+            /**
+             * категория товара.
+             */
+            category: MarketItemCategory;
+            /**
+             * URL изображения-обложки товара.
+             */
+            thumb_photo: string;
+            /**
+             * дата создания товара в формате Unixtime.
+             */
+            date: number;
+            /**
+             * статус доступности товара. Возможные значения: 0 — товар доступен; 1 — товар удален; 2 — товар недоступен.
+             */
+            availability: number;
+            /**
+             * изображения товара
+             */
+            photos: any[]; //TODO: change to Photo
+            /**
+             * возможность комментировать товар для текущего пользователя (1 — есть, 0 — нет).
+             */
+            can_comment: number;
+            /**
+             * возможность сделать репост товара для текущего пользователя (1 — есть, 0 — нет).
+             */
+            can_repost: number;
+            /**
+             * информация об отметках «Мне нравится»
+             */
+            likes: MarketItemCategoryLikesInfo;
+
+        }
+
+        /**
+         * категория товара
+         */
+        export interface MarketItemCategory {
+            /**
+             * идентификатор категории;
+             */
+            id: number;
+            /**
+             *  название категории;
+             */
+            name: string;
+            /**
+             * секция
+             */
+            section: MarketItemCategorySection;
+        }
+
+        /**
+         * информация об отметках «Мне нравится»
+         */
+        export interface MarketItemCategoryLikesInfo {
+            /**
+             * есть ли отметка «Мне нравится» от текущего пользователя (1 — есть, 0 — нет).
+             */
+            user_likes: number;
+            /**
+             * число отметок «Мне нравится».
+             */
+            count: number;
+        }
+
+        /**
+         * секция
+         */
+        export interface MarketItemCategorySection {
+            /**
+             *  идентификатор секции;
+             */
+            id: number;
+            /**
+             * название секции.
+             */
+            name: string;
+        }
+
+        /**
+         * цена
+         */
+        export interface MarketItemPrice {
+            /**
+             * цена товара в сотых долях единицы валюты;
+             */
+            amount: number;
+            /**
+             * валюта
+             */
+            currency: Currency;
+            /**
+             * строковое представление цены.
+             */
+            text: string;
         }
     }
 
