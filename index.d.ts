@@ -1265,63 +1265,303 @@ declare namespace VK {
          * тип записи.
          */
         export type PostType = 'post' | 'copy' | 'reply' | 'postpone' | 'suggest';
+        /**
+         * Объект, описывающий запись на стене пользователя или сообщества
+         */
         export interface Post {
+            /**
+             * идентификатор записи.
+             */
             id: number;
+            /**
+             * идентификатор владельца стены, на которой размещена запись. В версиях API ниже 5.7 это поле называется to_id.
+             */
             owner_id: number;
+            /**
+             * идентификатор автора записи (от чьего имени опубликована запись).
+             */
             from_id: number;
+            /**
+             * идентификатор администратора, который опубликовал запись (возвращается только для сообществ при запросе с ключом доступа администратора).
+             */
             created_by: number;
+            /**
+             * время публикации записи в формате unixtime.
+             */
             date: number;
+            /**
+             * текст записи.
+             */
             text: string;
+            /**
+             * идентификатор владельца записи, в ответ на которую была оставлена текущая.
+             */
             reply_owner_id: number;
+            /**
+             * идентификатор записи, в ответ на которую была оставлена текущая.
+             */
             reply_post_id: number;
+            /**
+             * 1, если запись была создана с опцией «Только для друзей».
+             */
             friends_only: number;
-            comments: {
-                count: number;
-                can_post: number;
-                groups_can_post: number;
-            };
-            likes: {
-                count: number;
-                user_likes: number;
-                can_like: number;
-                can_publish: number;
-            };
-            reposts: {
-                count: number;
-                user_reposted: number;
-            };
-            views: {
-                count: number;
-            };
+            /**
+             * информация о комментариях к записи
+             */
+            comments: PostCommentInfo;
+            /**
+             * информация о лайках к записи
+             */
+            likes: PostLikesInfo;
+            /**
+             * информация о репостах записи («Рассказать друзьям»)
+             */
+            reposts: PostRepostsInfo;
+            /**
+             * информация о просмотрах записи
+             */
+            views: PostViewsInfo;
+            /**
+             * тип записи, может принимать следующие значения: post, copy, reply, postpone, suggest.
+             */
             post_type: PostType;
-            attachments: any[]; //TODO: Attachment[] добвить тип
-            geo: {
-                type: string;
-                coordinates: string;
-                place: {
-                    id: number;
-                    title: string;
-                    latitude: number;
-                    longitude: number;
-                    created: number;
-                    icon: string;
-                    country: string;
-                    city: string;
-                    type: string;
-                    group_id: number;
-                    group_photo: string;
-                    checkins: number;
-                    updated: number;
-                    address: number;
-                };
-            };
+            /**
+             * информация о способе размещения записи
+             */
+            post_source: PostSource;
+            /**
+             * медиавложения записи (фотографии, ссылки и т.п.).
+             */
+            attachments: PostAttachment[];
+            /**
+             * информация о местоположении
+             */
+            geo: GeoObject;
+            /**
+             * идентификатор автора, если запись была опубликована от имени сообщества и подписана пользователем;
+             */
             signer_id: number;
+            /**
+             * массив, содержащий историю репостов для записи. Возвращается только в том случае, если запись является репостом. Каждый из объектов массива, в свою очередь, является объектом-записью стандартного формата.
+             */
             copy_history: any; // TODO: Узнать что за тип и поменять;
+            /**
+             * информация о том, может ли текущий пользователь закрепить запись (1 — может, 0 — не может).
+             */
             can_pin: number;
+            /**
+             * информация о том, может ли текущий пользователь удалить запись (1 — может, 0 — не может).
+             */
             can_delete: number;
+            /**
+             * информация о том, может ли текущий пользователь редактировать запись (1 — может, 0 — не может).
+             */
             can_edit: number;
+            /**
+             * информация о том, что запись закреплена.
+             */
             is_pinned: number;
+            /**
+             * информация о том, содержит ли запись отметку "реклама" (1 — да, 0 — нет).
+             */
             marked_as_ads: number;
+        }
+
+        /**
+         * тип вложения
+         */
+        export type PostAttachmentType = 'photo' | 'posted_photo' | 'video' | 'audio' | 'doc' | 'graffiti' | 'link' | 'note' | 'app' | 'poll' | 'page' | 'album' | 'photos_list' | 'market' | 'market_album' | 'sticker';
+        /**
+         * Первое поле — type (string) содержит тип вложения (photo,note,audio и т.д.). Название второго поля совпадает со значением, переданным в type. Второе поле содержит объект, представляющий медиавложение. Структура объекта в этом поле зависит от его типа. 
+         */
+        export interface PostAttachment {
+            /**
+             * тип вложения
+             */
+            type: PostAttachmentType;
+            /** 
+             * При получении объектов, прямого доступа к которым может не быть, например, фотографий или видео в новостях, вместе с объектами приходит поле access_key, которое необходимо передавать при получении этих объектов напрямую или при совершении с ними действий. 
+             * Например, поле access_key принимают методы video.get, photos.getById. access_key нужно добавить к строковому id объекта через символ подчеркивания
+             */
+            access_key: string;
+            //TODO: add attachment types
+
+        }
+
+        /**
+         * Объект post_source, описывающий способ размещения записи на стене, содержит следующие поля: 
+         */
+        export interface PostSource {
+            /**
+             * тип источника. Возможные значения: vk — запись создана через основной интерфейс сайта (http://vk.com/); widget — запись создана через виджет на стороннем сайте; api — запись создана приложением через API; rss— запись создана посредством импорта RSS-ленты со стороннего сайта; sms — запись создана посредством отправки SMS-сообщения на специальный номер. 
+             */
+            type: PostSourceType;
+            /**
+             * название платформы, если оно доступно
+             */
+            platform: PostSourcePlatformType;
+            /**
+             * тип действия (только для type = vk или widget). Возможные значения: profile_activity — изменение статуса под именем пользователя (для type = vk); profile_photo — изменение профильной фотографии пользователя (для type = vk); comments — виджет комментариев (для type = widget); like — виджет «Мне нравится» (для type = widget); poll — виджет опросов (для type = widget); 
+             */
+            data: string;
+            /**
+             * URL ресурса, с которого была опубликована запись.
+             */
+            url: string;
+        }
+
+        /**
+         * тип действия (только для type = vk или widget)
+         */
+        export type PostSourceDataType = 'profile_activity' | 'profile_photo' | 'comments' | 'like' | 'poll';
+
+        /**
+         * название платформы, если оно доступно
+         */
+        export type PostSourcePlatformType = 'android' | 'iphone' | 'wphone';
+
+        /**
+         * тип источника
+         */
+        export type PostSourceType = 'vk' | 'widget' | 'api ' | 'rss' | 'sms';
+
+        /**
+         * информация о просмотрах записи
+         */
+        export interface PostViewsInfo {
+            /**
+             * число просмотров записи.
+             */
+            count: number;
+        }
+
+        /**
+         * информация о репостах записи («Рассказать друзьям»)
+         */
+        export interface PostRepostsInfo {
+            /**
+             * число пользователей, скопировавших запись;
+             */
+            count: number;
+            /**
+             * наличие репоста от текущего пользователя (1 — есть, 0 — нет).
+             */
+            user_reposted: number;
+        }
+
+        /**
+         * информация о лайках к записи
+         */
+        export interface PostLikesInfo {
+            /**
+             *  число пользователей, которым понравилась запись;
+             */
+            count: number;
+            /**
+             * наличие отметки «Мне нравится» от текущего пользователя (1 — есть, 0 — нет);
+             */
+            user_likes: number;
+            /**
+             * информация о том, может ли текущий пользователь поставить отметку «Мне нравится» (1 — может, 0 — не может);
+             */
+            can_like: number;
+            /**
+             * информация о том, может ли текущий пользователь сделать репост записи (1 — может, 0 — не может).
+             */
+            can_publish: number;
+        }
+
+        /**
+         * информация о комментариях к записи
+         */
+        export interface PostCommentInfo {
+            /**
+             * количество комментариев;
+             */
+            count: number;
+            /**
+             * информация о том, может ли текущий пользователь комментировать запись (1 — может, 0 — не может);
+             */
+            can_post: number;
+            /**
+             * информация о том, могут ли сообщества комментировать запись.
+             */
+            groups_can_post: number;
+        }
+
+        /**
+         * информация о местоположении
+         */
+        export interface GeoObject {
+            /**
+             *  тип места
+             */
+            type: string;
+            /**
+             * координаты места
+             */
+            coordinates: string;
+            /**
+             * описание места (если оно добавлено)
+             */
+            place: {
+                /**
+                 * идентификатор места (если назначено)
+                 */
+                id: number;
+                /**
+                 * название места (если назначено);
+                 */
+                title: string;
+                /**
+                 *  географическая широта;
+                 */
+                latitude: number;
+                /**
+                 *  географическая долгота;
+                 */
+                longitude: number;
+                /**
+                 * дата создания (если назначено);
+                 */
+                created: number;
+                /**
+                 * URL изображения-иконки;
+                 */
+                icon: string;
+                /**
+                 * название страны
+                 */
+                country: string;
+                /**
+                 *  название города;
+                 */
+                city: string;
+                /**
+                 * тип чекина
+                 */
+                type: string;
+                /**
+                 * идентификатор сообщества;
+                 */
+                group_id: number;
+                /**
+                 *  URL миниатюры главной фотографии сообщества;
+                 */
+                group_photo: string;
+                /**
+                 * количество чекинов;
+                 */
+                checkins: number;
+                /**
+                 * время последнего чекина в Unixtime;
+                 */
+                updated: number;
+                /**
+                 * адрес
+                 */
+                address: number;
+            };
         }
 
 
